@@ -1,0 +1,64 @@
+$OpenBSD$
+
+Index: Engine/Makefile-defs.linux
+--- Engine/Makefile-defs.linux.orig
++++ Engine/Makefile-defs.linux
+@@ -1,8 +1,6 @@
+ USE_BUILT_IN_LIBSRC = 0
+ USE_MIDI_PATCH = 1
+ 
+-include Makefile-defs.freetype
+-
+ INCDIR = ../Engine ../Common ../Common/libinclude ../Common/libsrc/alfont-2.0.9 ../Plugins ../Engine/libsrc/glad/include
+ LIBDIR =
+ 
+@@ -11,17 +9,19 @@ CFLAGS := -O2 -g \
+     -Wunused-result \
+     -Wno-unused-value  \
+     -Werror=write-strings -Werror=format -Werror=format-security -Werror=implicit-function-declaration \
++    -Wno-reserved-user-defined-literal \
+     -DNDEBUG \
+-    -DALLEGRO_STATICLINK -DALLEGRO_NO_COMPATIBILITY -DALLEGRO_NO_FIX_ALIASES -DALLEGRO_NO_FIX_CLASS \
+-    -DLINUX_VERSION -DBUILTIN_PLUGINS -DHAVE_FSEEKO -DDISABLE_MPEG_AUDIO -DAGS_CASE_SENSITIVE_FILESYSTEM -DAGS_HAS_CD_AUDIO -DAGS_RUNTIME_PATCH_ALLEGRO \
++    -DALLEGRO_NO_COMPATIBILITY -DALLEGRO_NO_FIX_ALIASES -DALLEGRO_NO_FIX_CLASS \
++    -DLINUX_VERSION -DBUILTIN_PLUGINS -DHAVE_FSEEKO -DDISABLE_MPEG_AUDIO -DAGS_CASE_SENSITIVE_FILESYSTEM -DAGS_RUNTIME_PATCH_ALLEGRO \
+     -D_FILE_OFFSET_BITS=64 -DRTLD_NEXT \
+-    $(FT_CFLAGS) $(CFLAGS)
++    $(shell pkg-config --cflags x11) $(shell allegro-config --cflags) $(shell pkg-config --cflags freetype2) \
++    $(CFLAGS)
+ 
+ CXXFLAGS := -std=c++11 -Werror=delete-non-virtual-dtor $(CXXFLAGS)
+ 
+ LIBS := -Wl,-Bdynamic
+-LIBS += $(FT_LDFLAGS)
+-LIBS += $(shell pkg-config --libs allegro)
++LIBS += $(shell pkg-config --libs freetype2)
++LIBS += $(shell allegro-config --libs)
+ LIBS += $(shell pkg-config --libs x11)
+ LIBS += $(shell pkg-config --libs ogg)
+ LIBS += $(shell pkg-config --libs theora)
+@@ -33,7 +33,7 @@ else
+   LIBS += $(shell pkg-config --libs vorbis)
+ endif
+ LIBS += $(shell pkg-config --libs vorbisfile)
+-LIBS += -ldl -lpthread -lc -lm -lstdc++
++LIBS += -lpthread -lc -lm -lc++
+ 
+ ifneq ($(USE_BUILT_IN_LIBSRC), 1)
+ ALDUMB :=
+@@ -49,12 +49,13 @@ ifdef BUILD_STR
+ endif
+ 
+ PREFIX ?= /usr/local
+-CC ?= gcc
+-CXX ?= g++
++CC ?= cc
++CXX ?= c++
+ AR ?= ar
+ CFLAGS   += $(addprefix -I,$(INCDIR))
+ CXXFLAGS += $(CFLAGS)
+ ASFLAGS  += $(CFLAGS)
++CFLAGS   += -fgnu89-inline
+ LDFLAGS  += -rdynamic -Wl,--as-needed $(addprefix -L,$(LIBDIR))
+ 
+ ifneq (,$(RPATH))
