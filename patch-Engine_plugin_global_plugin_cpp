@@ -1,0 +1,17 @@
+$OpenBSD$
+
+Index: Engine/plugin/global_plugin.cpp
+--- Engine/plugin/global_plugin.cpp.orig
++++ Engine/plugin/global_plugin.cpp
+@@ -209,6 +209,11 @@ bool RegisterPluginStubs(const char* name)
+     ccAddExternalStaticFunction("AGS2Client::Initialize^2", Sc_PluginStub_Int0);
+     if (is_agsteam)
+     {
++      ccAddExternalStaticFunction("Steam::AddAchievement^1", Sc_PluginStub_Int0);
++      ccAddExternalStaticFunction("Steam::SetAchievementAchieved^1", Sc_PluginStub_Int0);
++      ccAddExternalStaticFunction("Steam::AddStat^2", Sc_PluginStub_Int0);
++      ccAddExternalStaticFunction("Steam::SetIntStat^2", Sc_PluginStub_Int0);
++      ccAddExternalStaticFunction("Steam::ResetStatsAndAchievements^0", Sc_PluginStub_Int0);
+       ccAddExternalStaticFunction("AGSteam::IsAchievementAchieved^1", Sc_PluginStub_Int0);
+       ccAddExternalStaticFunction("AGSteam::SetAchievementAchieved^1", Sc_PluginStub_Int0);
+       ccAddExternalStaticFunction("AGSteam::ResetAchievement^1", Sc_PluginStub_Int0);
