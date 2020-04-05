@@ -1,0 +1,32 @@
+$OpenBSD$
+
+Index: Engine/platform/linux/acpllnx.cpp
+--- Engine/platform/linux/acpllnx.cpp.orig
++++ Engine/platform/linux/acpllnx.cpp
+@@ -66,7 +66,7 @@ struct AGSLinux : AGSPlatformDriver {
+ 
+ 
+ int AGSLinux::CDPlayerCommand(int cmdd, int datt) {
+-  return cd_player_control(cmdd, datt);
++  return 1;//cd_player_control(cmdd, datt);
+ }
+ 
+ void AGSLinux::DisplayAlert(const char *text, ...) {
+@@ -169,7 +169,7 @@ eScriptSystemOSID AGSLinux::GetSystemOSID() {
+ }
+ 
+ int AGSLinux::InitializeCDPlayer() {
+-  return cd_player_init();
++  return 1;//cd_player_init();
+ }
+ 
+ void AGSLinux::PostAllegroExit() {
+@@ -181,7 +181,7 @@ void AGSLinux::SetGameWindowIcon() {
+ }
+ 
+ void AGSLinux::ShutdownCDPlayer() {
+-  cd_exit();
++  //cd_exit();
+ }
+ 
+ AGSPlatformDriver* AGSPlatformDriver::GetDriver() {
